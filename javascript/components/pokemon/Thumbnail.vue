@@ -1,22 +1,19 @@
 <template>
-    <div :class="{'render-me': isWanted }">
-        <div :key="pokemon.id" v-show="isWanted">
-            <span>{{ pokemon.id }}: </span><span>{{ capitalizedFirstCharacter(pokemon.name) }}</span><img :src="pokemon.sprites.front_default" />
-        </div>
+    <div :key="pokemon.id">
+        <span>{{ pokemon.id }}: </span>
+        <span>{{ capitalizedFirstCharacter(pokemon.name) }}</span>
+        <img :src="pokemon.sprites.front_default" />
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="js">
     const { capitalizedFirstCharacter } = utils();
 
-    interface Props {
-        pokemonName: string,
-        filteredString: string
-    }
+    const props = defineProps({
+        pokemonName: String
+    });
 
-    const props = defineProps<Props>();    
     const { pending, data: pokemon } = await useLazyFetch('https://pokeapi.co/api/v2/pokemon/' + props.pokemonName);
-    const isWanted = computed<boolean>(() => props.pokemonName.includes(props.filteredString.toLocaleLowerCase()));
     
 </script>
 

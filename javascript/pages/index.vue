@@ -21,72 +21,39 @@
 
     </div>
     <div class="grid-container">
-        <div v-for="pokemon in pokemons.results">
+        <div v-for="pokemon in filtered">
             <NuxtLink :to="`/${pokemon.name}`">
-                <PokemonThumbnail :pokemon-name="pokemon.name" :filteredString="userInput" />
+                <PokemonThumbnail :pokemon-name="pokemon.name" />
             </NuxtLink>
         </div>  
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="js">
     definePageMeta({
         layout: 'default'
     });
 
-    interface Pokemon {
-        name: string,
-        url: string
-    };
+    const userInput = ref("Char");
 
-    // const filteredString = ref<string>("");
-    const userInput = ref<string>("");
-
-    const page = ref<number>(0);
+    const page = ref(0);
     /* Instruction just wanted the first 60 pokemon and limit on that. */
-    const { pending, data: pokemons } = useFetch<Pokemon>("https://pokeapi.co/api/v2/pokemon?limit=60");
+    const { data: pokemons } = await useFetch("https://pokeapi.co/api/v2/pokemon?limit=60");
 
-    /* Remove paging to just stick to the first 60 */
-
-    // const pageDown = () => {
-    //     if (page.value > 0) page.value--;        
-    // };
-
-    // const pageUp = () => {        
-    //     if (page.value < 21) page.value++;
-    // };
-
-    // const updateFilteredString = () => {
-    //     filteredString.value = userInput.value;
-    // }
-
-    // const filtered = computed<Pokemon[]>(() => {
-    //     const myFiltered: Pokemon[] = [];
-    //     const myLimit: Pokemon[] = [];
-    //     // lack of typescript experiences really showing here
-    //     pokemons["_rawValue"].results.forEach(function (value: any) {
-    //         if ((filteredString.value != "" && value.name.includes(filteredString.value.toLocaleLowerCase())) || filteredString.value == "") {
-    //                 myFiltered.push({ name: value.name, url: value.url });
-    //         }            
-    //     });
-    //     let count: number = 0;
-    //     let offset: number = page.value * 60;
-    //     myFiltered.forEach(function (value: Pokemon) {
-    //         if (myLimit.length < 60) {
-    //             if (count >= offset) myLimit.push({ name: value.name, url: value.url });
-    //         }
-    //         else {
-    //             return;
-    //         }            
-    //         count++;
-    //     });
-    //     console.log(myLimit);
-    //     return myLimit;
-    // });
-
-    // const computedKey = computed(() => {
-    //     return page.value + filteredString.value;
-    // });
+    const filtered = computed(() => {
+        // console.log(pokemons.value);
+        const limit = [];
+        // for (item in pokemons.value.results) console.log(item);
+        pokemons.value.results.forEach((value) => {
+            // results from pokemon api are all lowercase
+            if (value.name.includes(userInput.value.toLowerCase()))
+                limit.push({
+                    name: value.name,
+                    url: value.url
+                });
+        });
+        return limit;
+    });
 </script>
 
 <style scoped>

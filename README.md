@@ -1,6 +1,3 @@
-# DougFulkersonAssignment
-A take home assessment from Doug Fulkerson
-
 # NUXT requirement
 Node.js v16.10.0 or newer (Using 18.18.0)
 
@@ -20,3 +17,5 @@ npx nuxi@latest init pokemon
 Using:
 - Vue VSCode Snippets
 - Vue Vue Language Features (Volar)
+- GitLens
+
